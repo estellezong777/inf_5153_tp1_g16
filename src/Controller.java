@@ -63,13 +63,31 @@ public class Controller {
         listMessageInTransit.add(msg);
     }
 
-//    public void processMsgInTransit(){
-//        for (MessageText msg: listMessageInTransit) {
-//            //TODO
-//
-//
-//        }
-//    }
+    public void processMsgInTransit(){
+        Iterator<MessageText> iterator = listMessageInTransit.iterator();
+        while (iterator.hasNext()) {
+            MessageText message = iterator.next();
+            Agent receiver = findAgentByName(message.getReceiver());
+            //if receiver exist, send message to receiver
+            if (receiver != null) {
+                receiver.receiveMessage(message);
+                //add logger maybe
+//                logger.info("Message " + message.getNumMessage() + " sent to " + message.getReceiver());
+                iterator.remove();
+                //if no receiver, create a message with type noReceiver and back send to the sender
+            } else {
+                MessageText noReceiverMessage = new MessageText(message.getSender(),null, msgType.noReceiver, "Receiver does not exist");
+                Agent sender = findAgentByName(message.getSender());
+                if (sender != null) {
+                    sender.receiveMessage(noReceiverMessage);
+                    //maybe a logger
+//                    logger.debug("Receiver " + message.getReceiver() +
+//                            " does not exist. Sent NoReceiver message to " + message.getSender());
+                }
+                iterator.remove();
+            }
+        }
+    }
     }
 
 
