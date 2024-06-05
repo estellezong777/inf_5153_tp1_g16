@@ -35,7 +35,7 @@ public class Controller {
             if(agentName.equals(agent.getName()) ){
                 listAgents.remove(agent);
                 logger.info("Agent " + agent.getName() + " unsubscribed successfully!");
-        }
+            }
         }
         throw new IllegalArgumentException("Agent name doesn't in the agent list! Please check your information!");
     }
@@ -48,7 +48,7 @@ public class Controller {
             }
         }
         return null;
-        }
+    }
 
 
     // Fonction 'isAgentExist' call the fonction 'findAgentByName'. We compare the result that return in fonction
@@ -70,7 +70,7 @@ public class Controller {
             Agent receiver = findAgentByName(message.getReceiver());
             //if receiver exist, send message to receiver
             if (receiver != null) {
-                receiver.receiveMessage(message);
+                transferMessage(message,receiver);
                 //add logger maybe
 //                logger.info("Message " + message.getNumMessage() + " sent to " + message.getReceiver());
                 iterator.remove();
@@ -88,15 +88,7 @@ public class Controller {
             }
         }
     }
+    public void transferMessage(MessageText message,Agent receiver){
+        receiver.receiveMessage(message);
     }
-
-
-
-
-
-
-
-
-
-
-
+}

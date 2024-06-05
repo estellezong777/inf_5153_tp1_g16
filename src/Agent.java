@@ -39,16 +39,16 @@ public class Agent implements Runnable {
     public void receiveMessage(MessageText msg){
         receivedmsgList.add(msg);
         //log
-        if(msg.getType() == msgType.ACK||msg.getType() == msgType.ACK) {
+        if(msg.getType() == msgType.ACK||msg.getType() == msgType.normalText) {
             loggerLevel logLevel = loggerLevel.INFO;
             String messagePrint = msg.getReceiver() + "received a message "+msg.getType()+"( "+  msg.getNumMessage()+") from: "
                     + msg.getSender();
-            logger.log(logLevel, messagePrint);
+            //logger.log(logLevel, messagePrint); maybe appeler d'autres methodes
         } else if(msg.getType() == msgType.noReceiver){
             loggerLevel logLevel = loggerLevel.DEBUG;
             String messagePrint = msg.getReceiver() + "received a message "+msg.getType()+"( "+  msg.getNumMessage() +": the receiver doesn't exist";
                 //    + msg.getSender();
-            logger.log(logLevel, messagePrint);
+            //logger.log(logLevel, messagePrint);
         }
     }
 
@@ -72,6 +72,8 @@ public class Agent implements Runnable {
                     break;
 
                 case normalText:
+                    MessageText messageACK = new MessageText(msg.getReceiver(),msg.getSender(),msgType.ACK,"ACK");
+                    controller.addMsgToListInTransit(messageACK);
                     break;
 
                 case noReceiver:
