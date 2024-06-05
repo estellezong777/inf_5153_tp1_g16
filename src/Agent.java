@@ -4,32 +4,52 @@ import java.util.List;
 public class Agent implements Runnable {
 
     private String nomAgent;
-    private List<MessageText> checkList ;
-    private List<MessageText> sentmsgList;
+    private List<MessageText> sendmsgList;
     private List<MessageText> receivedmsgList;
 
     private boolean stateOnline;
     Controller controller;
 
+    Logger logger;
+
     //constructor
     public Agent(String nomAgent){
         this.nomAgent = nomAgent;
-        this.checkList = new ArrayList<>();
-        this.sentmsgList = new ArrayList<>();
+        this.sendmsgList = new ArrayList<>();
         this.receivedmsgList= new ArrayList<>();
     }
 
     public void sendMessage(MessageText msg){
-        if(msg!=null){
-            //controller.addMessageToList();
-            sentmsgList.add(msg);
-            checkList.add(msg);
+        if(msg.getType() == msgType.normalText) {
+            sendmsgList.add(msg); //How about ack?
+            //if message.type == ack???, i should wait until i receive another ack?
         }
+            controller.addMsgToListInTransit(msg);
+            //log
+            loggerLevel logLevel = loggerLevel.INFO;
+            String messagePrint = msg.getSender() + "sent a message " + msg.getType() +"( " + msg.getNumMessage()+
+                    ") from: " + msg.getReceiver();//or controller?
+            logger.log(logLevel, messagePrint);
+
+
+
     }
 
+    //TODO:a etre appeler dans controller processInTransit method
     public void receiveMessage(MessageText msg){
         receivedmsgList.add(msg);
-        // checkList.add(msg.getNumMessge());
+        //log
+        if(msg.getType() == msgType.ACK||msg.getType() == msgType.ACK) {
+            loggerLevel logLevel = loggerLevel.INFO;
+            String messagePrint = msg.getReceiver() + "received a message "+msg.getType()+"( "+  msg.getNumMessage()+") from: "
+                    + msg.getSender();
+            logger.log(logLevel, messagePrint);
+        } else if(msg.getType() == msgType.noReceiver){
+            loggerLevel logLevel = loggerLevel.DEBUG;
+            String messagePrint = msg.getReceiver() + "received a message "+msg.getType()+"( "+  msg.getNumMessage() +": the receiver doesn't exist";
+                //    + msg.getSender();
+            logger.log(logLevel, messagePrint);
+        }
     }
 
     public boolean isStateOnline() {
@@ -40,32 +60,31 @@ public class Agent implements Runnable {
         this.stateOnline = stateOnline;
     }
 
-    public void processReceivedMessages(MessageText msg){
-
-        switch(msg.getMsgType()){
-            case ACK:
-                for (int i = 0; i < checkList.size(); i++) {
-                    if(checkList.get(i).getNumMessge() == msg.getNumMessge()){
-                        checkList.remove(i);
+    public void processReceivedMessages( ){
+        for (MessageText msg: receivedmsgList){
+            switch(msg.getType()){
+                case ACK:
+                    for (int i = 0; i < sendmsgList.size(); i++) {
+                        if(sendmsgList.get(i).getNumMessage() == msg.getNumMessage()){
+                            sendmsgList.remove(i);
+                        }
                     }
-                }
-                receiveMessage(msg); ///???
-                break;
+                    break;
 
-            case normalText:
-                receiveMessage(msg);
-                break;
+                case normalText:
+                    break;
 
-            case noReceiver:
-                for (int i = 0; i < checkList.size(); i++) {
-                    if(checkList.get(i).getNumMessge() == msg.getNumMessge()){
-                        checkList.remove(i);
+                case noReceiver:
+                    for (int i = 0; i < sendmsgList.size(); i++) {
+                        if(sendmsgList.get(i).getNumMessage() == msg.getNumMessage()){
+                            sendmsgList.remove(i);
+                        }
                     }
-                }
-                //receiveMessage(msg); ///???
-                break;
-            default:
-
+                    break;
+                default:
+                    System.out.println("Invalid type of messageText");
+                    break;
+            }
         }
     }
 
@@ -76,10 +95,11 @@ public class Agent implements Runnable {
     @Override
     public void run(){
         while(true){
-            if (checkList.size()>0){
-                //resend to controller the messages still in the checkList
-                for (MessageText msg: checkList) {
+            if (sendmsgList.size()>0){
+                //resend to controller the messages still in the sendmsgList
+                for (MessageText msg: sendmsgList) {
                     sendMessage(msg);
+
                 }
             }
 

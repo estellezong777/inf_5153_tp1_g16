@@ -59,7 +59,22 @@ public class Controller {
         return findAgentByName(nameAgentCheck) !=null;
     }
 
+    public void addMsgToListInTransit(MessageText msg){
+        listMessageInTransit.add(msg);
     }
+
+//    public void processMsgInTransit(){
+//        for (MessageText msg: listMessageInTransit) {
+//            //TODO
+//
+//
+//        }
+//    }
+    }
+
+
+
+
 
 
 
