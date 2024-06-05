@@ -9,7 +9,7 @@ public class Agent implements Runnable {
     private List<MessageText> receivedmsgList;
 
     private boolean stateOnline;
-    Controller controler;
+    Controller controller;
 
     //constructor
     public Agent(String nomAgent){
