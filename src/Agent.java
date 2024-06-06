@@ -1,7 +1,7 @@
+import com.example.logging.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
-import com.example.logging.Logger;
-import com.example.logging.loggerLevel;
 
 public class Agent implements Runnable {
 
@@ -10,15 +10,17 @@ public class Agent implements Runnable {
     private List<MessageText> receivedmsgList;
 
     private boolean stateOnline;
-    Controller controller;
+    private final Controller controller;
 
-    Logger logger;
+    private final Logger logger;
 
     //constructor
-    public Agent(String nomAgent){
+    public Agent(String nomAgent,Controller controller,Logger logger){
         this.nomAgent = nomAgent;
         this.sendmsgList = new ArrayList<>();
         this.receivedmsgList= new ArrayList<>();
+        this.controller=controller;
+        this.logger=logger;
     }
 
     public void sendMessage(MessageText msg){
@@ -26,12 +28,12 @@ public class Agent implements Runnable {
             sendmsgList.add(msg); //How about ack?
             //if message.type == ack???, i should wait until i receive another ack?
         }
-            controller.addMsgToListInTransit(msg);
-            //log
-            loggerLevel logLevel = loggerLevel.INFO;
-            String messagePrint = msg.getSender() + "sent a message " + msg.getType() +"( " + msg.getNumMessage()+
-                    ") from: " + msg.getReceiver();//or controller?
-            logger.log(logLevel, messagePrint);
+        controller.addMsgToListInTransit(msg);
+        //log
+        Logger.loggerLevel logLevel = Logger.loggerLevel.INFO;
+        String messagePrint = msg.getSender() + "sent a message " + msg.getType() +"( " + msg.getNumMessage()+
+                ") from: " + msg.getReceiver();//or controller?
+        logger.log(logLevel, messagePrint);
 
 
 
@@ -42,14 +44,14 @@ public class Agent implements Runnable {
         receivedmsgList.add(msg);
         //log
         if(msg.getType() == msgType.ACK||msg.getType() == msgType.normalText) {
-            loggerLevel logLevel = loggerLevel.INFO;
+            Logger.loggerLevel logLevel = Logger.loggerLevel.INFO;
             String messagePrint = msg.getReceiver() + "received a message "+msg.getType()+"( "+  msg.getNumMessage()+") from: "
                     + msg.getSender();
             //logger.log(logLevel, messagePrint); maybe appeler d'autres methodes
         } else if(msg.getType() == msgType.noReceiver){
-            loggerLevel logLevel = loggerLevel.DEBUG;
+            Logger.loggerLevel logLevel = Logger.loggerLevel.DEBUG;
             String messagePrint = msg.getReceiver() + "received a message "+msg.getType()+"( "+  msg.getNumMessage() +": the receiver doesn't exist";
-                //    + msg.getSender();
+            //    + msg.getSender();
             //logger.log(logLevel, messagePrint);
         }
     }
