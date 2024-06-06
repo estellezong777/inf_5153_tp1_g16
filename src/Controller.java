@@ -1,18 +1,20 @@
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
-import java.util.logging.Logger;
-
+import com.example.logging.Logger;
+import com.example.logging.loggerLevel;
 public class Controller {
     private final List<MessageText> listMessageInTransit;
     private final List<Agent> listAgents;
-    private final Logger logger;
 
-    public Controller(Logger logger){
+    private final Logger loggerConsole;
+    private final Logger fileLogger;
+
+    public Controller(Logger loggerConsole, Logger fileLogger){
         this.listAgents = new ArrayList<>();
         this.listMessageInTransit= new ArrayList<>();
-        this.logger=logger;
+        this.loggerConsole=loggerConsole;
+        this.fileLogger=fileLogger;
     }
 
     // subscribe as an agent while the agent name is unique.
@@ -25,7 +27,8 @@ public class Controller {
         }
         // if not, add the agent name to the agents list and print a message to the user
         listAgents.add(agent);
-        logger.info("Congratulations! Agent "+agent.getName()+" is subscribed successfully!");
+        loggerConsole.info("Congratulations! Agent "+agent.getName()+" is subscribed successfully!");
+        fileLogger.info("Subscribed agent: " + agent.getName());
 
     }
 
@@ -34,8 +37,9 @@ public class Controller {
         for (Agent agentName: listAgents){
             if(agentName.equals(agent.getName()) ){
                 listAgents.remove(agent);
-                logger.info("Agent " + agent.getName() + " unsubscribed successfully!");
-            }
+                loggerConsole.info("Agent " + agent.getName() + " unsubscribed successfully!");
+                fileLogger.info("Unsubscribed agent: " + agent.getName());
+        }
         }
         throw new IllegalArgumentException("Agent name doesn't in the agent list! Please check your information!");
     }
@@ -48,7 +52,7 @@ public class Controller {
             }
         }
         return null;
-    }
+        }
 
 
     // Fonction 'isAgentExist' call the fonction 'findAgentByName'. We compare the result that return in fonction
@@ -61,8 +65,8 @@ public class Controller {
 
     public void addMsgToListInTransit(MessageText msg){
         listMessageInTransit.add(msg);
-    }
 
+    }
     public void processMsgInTransit(){
         Iterator<MessageText> iterator = listMessageInTransit.iterator();
         while (iterator.hasNext()) {
@@ -72,7 +76,8 @@ public class Controller {
             if (receiver != null) {
                 transferMessage(message,receiver);
                 //add logger maybe
-//                logger.info("Message " + message.getNumMessage() + " sent to " + message.getReceiver());
+                loggerConsole.info("Message " + message.getNumMessage() + " sent to " + message.getReceiver());
+                fileLogger.info("Message " + message.getNumMessage() + " sent to " + message.getReceiver());
                 iterator.remove();
                 //if no receiver, create a message with type noReceiver and back send to the sender
             } else {
@@ -81,8 +86,9 @@ public class Controller {
                 if (sender != null) {
                     sender.receiveMessage(noReceiverMessage);
                     //maybe a logger
-//                    logger.debug("Receiver " + message.getReceiver() +
+                   loggerConsole.debug("Receiver: " + message.getReceiver() +"do not existe. Please try again later. ");
 //                            " does not exist. Sent NoReceiver message to " + message.getSender());
+                    fileLogger.info("Receiver: " + message.getReceiver() +"do not existe");
                 }
                 iterator.remove();
             }
@@ -91,4 +97,17 @@ public class Controller {
     public void transferMessage(MessageText message,Agent receiver){
         receiver.receiveMessage(message);
     }
-}
+
+    public void run() {
+        while (true) {
+            processMsgInTransit();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                loggerConsole.debug("System interrupted: " + e.getMessage());
+                fileLogger.debug("System interrupted: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+    }
