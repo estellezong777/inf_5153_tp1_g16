@@ -1,6 +1,5 @@
 package com.example.logging;
 
-import com.example.logging.loggerLevel;
 
 public class loggerConsole extends Logger{
     public loggerConsole(loggerLevel loggerLevel, String serviceName) {
