@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
+import com.example.logging.Logger;
+import com.example.logging.loggerLevel;
 
 public class Agent implements Runnable {
 
