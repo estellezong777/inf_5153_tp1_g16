@@ -1,5 +1,4 @@
 import com.example.logging.Logger;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,18 +8,20 @@ public class Agent implements Runnable {
     private List<MessageText> sendmsgList;
     private List<MessageText> receivedmsgList;
 
-    private boolean stateOnline;
+    private boolean stateOnline = false; // par defaut le status est false
     private final Controller controller;
 
-    private final Logger logger;
+    private final Logger loggerConsole;
+    private final Logger fileLogger;
 
     //constructor
-    public Agent(String nomAgent,Controller controller,Logger logger){
+    public Agent(String nomAgent,Controller controller,Logger loggerConsole,Logger fileLogger){
         this.nomAgent = nomAgent;
         this.sendmsgList = new ArrayList<>();
         this.receivedmsgList= new ArrayList<>();
         this.controller=controller;
-        this.logger=logger;
+        this.loggerConsole=loggerConsole;
+        this.fileLogger=fileLogger;
     }
 
     public void sendMessage(MessageText msg){
@@ -32,8 +33,9 @@ public class Agent implements Runnable {
         //log
         Logger.loggerLevel logLevel = Logger.loggerLevel.INFO;
         String messagePrint = msg.getSender() + "sent a message " + msg.getType() +"( " + msg.getNumMessage()+
-                ") from: " + msg.getReceiver();//or controller?
-        logger.log(logLevel, messagePrint);
+                ") to: " + msg.getReceiver();//or controller?
+        loggerConsole.log(logLevel, messagePrint);
+        fileLogger.info(messagePrint);
 
 
 
@@ -47,12 +49,16 @@ public class Agent implements Runnable {
             Logger.loggerLevel logLevel = Logger.loggerLevel.INFO;
             String messagePrint = msg.getReceiver() + "received a message "+msg.getType()+"( "+  msg.getNumMessage()+") from: "
                     + msg.getSender();
-            //logger.log(logLevel, messagePrint); maybe appeler d'autres methodes
+            loggerConsole.log(logLevel, messagePrint);
+            fileLogger.info(messagePrint);
+
         } else if(msg.getType() == msgType.noReceiver){
             Logger.loggerLevel logLevel = Logger.loggerLevel.DEBUG;
-            String messagePrint = msg.getReceiver() + "received a message "+msg.getType()+"( "+  msg.getNumMessage() +": the receiver doesn't exist";
-            //    + msg.getSender();
-            //logger.log(logLevel, messagePrint);
+            String messagePrint = msg.getReceiver() +"doesn't exist. "+ "\n Message type is: "+msg.getType()+"."+
+                    "\n"+ "The message"+ msg.getNumMessage() +"failed to send by " + msg.getSender();
+
+            loggerConsole.log(logLevel, messagePrint);
+            fileLogger.info(messagePrint);
         }
     }
 
