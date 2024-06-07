@@ -8,7 +8,7 @@ public class loggerConsole extends Logger{
 
     @Override
     public void log(loggerLevel level, String messagePrint) {
-        System.out.println("Lever: "+level +"."+"Here is the message: "+messagePrint);
+        System.out.println("Message Level: "+level +"."+"Here is the message: "+messagePrint);
 
 
     }
