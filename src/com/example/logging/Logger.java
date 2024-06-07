@@ -22,6 +22,8 @@ public abstract class Logger {
         log(loggerLevel.INFO," ( "+ serviceName +" ) " + msg);
     }
     public void debug(String msg){
+        log(loggerLevel.INFO," ( "+ serviceName +" ) " + msg);
         log(loggerLevel.DEBUG," ( "+ serviceName +" ) " + msg);
+
     }
 }
