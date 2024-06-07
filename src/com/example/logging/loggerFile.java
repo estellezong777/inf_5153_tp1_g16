@@ -6,8 +6,8 @@ import java.io.*;
 public class loggerFile extends Logger implements AutoCloseable{
     private final PrintWriter writer;
 
-    public loggerFile(loggerLevel level, String serviceName, String fileName) throws IOException{
-        super(level,serviceName);
+    public loggerFile( String serviceName, String fileName) throws IOException{
+        super(serviceName);
         this.writer = new PrintWriter(new FileWriter(fileName,true));
     }
     @Override

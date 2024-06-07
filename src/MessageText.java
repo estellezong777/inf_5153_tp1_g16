@@ -2,7 +2,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MessageText {
     private static final AtomicInteger idMessage = new AtomicInteger(0);
     private final msgType type;
-    private final String text;
+    private  String text;
     private final int numMessage;
     private final String Sender;
     private final String receiver;
@@ -41,4 +41,13 @@ public class MessageText {
     public void setMessageState(boolean messageState) {
         this.messageIsActive = messageState;
     }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
 }

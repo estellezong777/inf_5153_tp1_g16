@@ -1,10 +1,10 @@
 public class EncoderNeutre extends Encoder{
     @Override
-    public String encoder (String msg){
+    public String encode (String msg){
         return msg;
     }
 
-    public String Decode(String msg){
+    public String decode(String msg){
         return msg;
     }
 

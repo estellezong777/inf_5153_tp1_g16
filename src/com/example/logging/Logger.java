@@ -5,14 +5,13 @@ public abstract class Logger {
         INFO,
         DEBUG
     }
-    protected final loggerLevel level;
+    protected loggerLevel level;
 
     // Le nom du composant du message de journal généré
     protected final String serviceName;
 
 
-    public Logger(loggerLevel LoggerLevel,String serviceName) {
-        this.level=LoggerLevel;
+    public Logger(String serviceName) {
         this.serviceName=serviceName;
     }
 

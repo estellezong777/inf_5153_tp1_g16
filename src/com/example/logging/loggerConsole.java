@@ -2,8 +2,8 @@ package com.example.logging;
 
 
 public class loggerConsole extends Logger{
-    public loggerConsole(loggerLevel loggerLevel, String serviceName) {
-        super(loggerLevel, serviceName);
+    public loggerConsole( String serviceName) {
+        super( serviceName);
     }
 
     @Override

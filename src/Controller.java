@@ -68,14 +68,14 @@ public class Controller implements Runnable{
         listMessageInTransit.add(msg);
 
     }
-    public void processMsgInTransit(){
+    public synchronized void processMsgInTransit(){
         Iterator<MessageText> iterator = listMessageInTransit.iterator();
         while (iterator.hasNext()) {
             MessageText message = iterator.next();
             boolean receiverExist = isAgentExist(message.getReceiver());
             Agent receiverAgent= findAgentByName(message.getReceiver());
 
-            if (message.isMessageActive() == true){
+            if (message.isMessageActive() == true){ // 信息没有丢失，可以发送
                 //if receiver exist and he/her is online, send message to receiver
                 if (receiverExist ==true && (receiverAgent.isStateOnline()==true)) {
                 transferMessage(message,receiverAgent);
@@ -84,7 +84,7 @@ public class Controller implements Runnable{
                 fileLogger.info("Message " + message.getNumMessage() + " sent to " + message.getReceiver());
                 iterator.remove();
                 //if no receiver, create a message with type noReceiver and back send to the sender
-            } else {
+            }else if(receiverExist==false) {
                 MessageText noReceiverMessage = new MessageText(message.getSender(),null, msgType.noReceiver, "Receiver does not exist");
                 Agent sender = findAgentByName(message.getSender());
                 if (sender != null) {
@@ -110,7 +110,7 @@ public class Controller implements Runnable{
         while (true) {
             processMsgInTransit();
             try {
-                Thread.sleep(50);
+                Thread.sleep(10000);
             } catch (InterruptedException e) {
                 loggerConsole.debug("System interrupted: " + e.getMessage());
                 fileLogger.debug("Controller interrupted: " + e.getMessage());
