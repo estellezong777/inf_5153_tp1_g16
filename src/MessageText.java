@@ -6,8 +6,7 @@ public class MessageText {
     private final int numMessage;
     private final String Sender;
     private final String receiver;
-    private  boolean acknowledged;
-    private boolean msgTreatmentState;
+    private boolean messageIsActive = true;
 
 
     public MessageText( String sender, String receiver,msgType type, String text) {
@@ -16,8 +15,6 @@ public class MessageText {
         this.text = text;
         this.Sender = sender;
         this.receiver = receiver;
-        this.acknowledged = false;
-        this.msgTreatmentState = false;
 
     }
 
@@ -37,20 +34,11 @@ public class MessageText {
         return Sender;
     }
 
-    public String getText() {
-        return text;
+    public boolean isMessageActive() {
+        return messageIsActive;
     }
 
-    public boolean isAcknowledged() {
-        return acknowledged;
-    }
-
-    public void setAcknowledged(boolean acknowledged){
-        this.acknowledged=acknowledged;
-    }
-
-    public void setMsgTreatmentState(boolean msgTreatmentState) {
-        this.msgTreatmentState = msgTreatmentState;
+    public void setMessageState(boolean messageState) {
+        this.messageIsActive = messageState;
     }
 }
-
