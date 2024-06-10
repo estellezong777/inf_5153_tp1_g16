@@ -36,35 +36,35 @@ public class Main {
         bob.sendMessage(message1);
         //sendMessageAndWait(bob, alice, message1.getText());
 
-        MessageText message2 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "How are you doing today?");
+        MessageText message2 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "Hey!");
         //sendMessageAndWait(bob, alice, message2.getText());
         bob.sendMessage(message2);
 
-        MessageText message3 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "Did you complete the project?");
+        MessageText message3 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "What's up!");
         message3.setMessageState(false);
         bob.sendMessage(message3);
 
-        MessageText message4 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "Let's meet up for lunch.");
+        MessageText message4 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "Any plans for summer holidays?.");
         message4.setMessageState(false);
         bob.sendMessage(message4);
 
-        MessageText message5 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "Have you seen the latest news?");
+        MessageText message5 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "You want to go to Toronto?");
         bob.sendMessage(message5);
 
-        MessageText message6 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "Please review the document I sent.");
+        MessageText message6 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "Or you prefer play in Disney in the states?");
         bob.sendMessage(message6);
 
-        MessageText message7 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "Are you attending the meeting tomorrow?");
+        MessageText message7 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "Or we can have a BBQ party in Montreal");
         bob.sendMessage(message7);
 
-        MessageText message8 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "Can you share the report?");
+        MessageText message8 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "Please let me know");
         message8.setMessageState(false);
         bob.sendMessage(message8);
 
-        MessageText message9 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "What are your plans for the weekend?");
+        MessageText message9 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "I am going to the bed now");
         bob.sendMessage(message9);
 
-        MessageText message10 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "Looking forward to your reply.");
+        MessageText message10 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "Bye. Looking forward to your reply.");
         bob.sendMessage(message10);
 
 
