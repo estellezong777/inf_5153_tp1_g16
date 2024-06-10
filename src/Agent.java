@@ -15,6 +15,7 @@ public class Agent implements Runnable {
     private final Logger fileLogger;
 
     private Encoder encoder = new CodeShiftEncoder();
+    private Encoder encoderNeutre = new EncoderNeutre();
 
     public Agent(String nomAgent, Controller controller, Logger loggerConsole, Logger fileLogger) {
         this.nomAgent = nomAgent;
@@ -25,30 +26,20 @@ public class Agent implements Runnable {
         this.fileLogger = fileLogger;
     }
 
-    public void sendMessage(MessageText msg) {
-        if (msg.getType() == msgType.normalText) {
-            sendmsgList.add(msg);
-            String textToEncode = msg.getText();
-            msg.setText(encoder.encode(textToEncode));
-        }
-        controller.addMsgToListInTransit(msg);
-        Logger.loggerLevel logLevel = Logger.loggerLevel.INFO;
-        String messagePrint = msg.getSender() + " sent a message " + msg.getType() + "( " + msg.getNumMessage() +
-                ") to: " + msg.getReceiver();
-        loggerConsole.log(logLevel, messagePrint);
-        fileLogger.info(messagePrint);
-    }
 
     public void receiveMessage(MessageText msg) {
         if (msg.getType() == msgType.normalText) {
             String textToDecode = msg.getText();
-            msg.setText(encoder.decode(textToDecode));
+            if (msg.getNumMessage()==1){
+                msg.setText(encoderNeutre.decode(textToDecode));
+            }else {
+            msg.setText(encoder.decode(textToDecode));}
         }
         receivedmsgList.add(msg);
         if (msg.getType() == msgType.ACK || msg.getType() == msgType.normalText) {
             Logger.loggerLevel logLevel = Logger.loggerLevel.INFO;
-            String messagePrint = msg.getReceiver() + " received a message " + msg.getType() + "( " + msg.getNumMessage() + ") from: "
-                    + msg.getSender();
+            String messagePrint = msg.getReceiver() + " received a message " + msg.getType() + "(" + msg.getNumMessage() + ") from: "
+                    + msg.getSender()+" Message content: "+msg.getText();
             loggerConsole.log(logLevel, messagePrint);
             fileLogger.info(messagePrint);
         } else if (msg.getType() == msgType.noReceiver) {
@@ -59,6 +50,30 @@ public class Agent implements Runnable {
             fileLogger.info(messagePrint);
         }
     }
+
+    public void sendMessage(MessageText msg) {
+        //定义信息1用neutre
+        if (msg.getType() == msgType.normalText) {
+            sendmsgList.add(msg);
+
+            String textToEncode = msg.getText();
+            if (msg.getNumMessage()==1){
+
+                msg.setText(encoderNeutre.encode(textToEncode));
+
+            }else {
+            msg.setText(encoder.encode(textToEncode));}
+        }
+
+        controller.addMsgToListInTransit(msg);
+
+        Logger.loggerLevel logLevel = Logger.loggerLevel.INFO;
+        String messagePrint = msg.getSender() + " sent a message " + msg.getType() + "( " + msg.getNumMessage() +
+                ") to: " + msg.getReceiver();
+        loggerConsole.log(logLevel, messagePrint);
+        fileLogger.info(messagePrint);
+    }
+
 
     public boolean isStateOnline() {
         return stateOnline;

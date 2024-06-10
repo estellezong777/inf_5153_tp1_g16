@@ -65,12 +65,14 @@ public class Controller implements Runnable{
     }
 
     public void addMsgToListInTransit(MessageText msg){
+
         listMessageInTransit.add(msg);
 
     }
     public synchronized void processMsgInTransit(){
         Iterator<MessageText> iterator = listMessageInTransit.iterator();
         while (iterator.hasNext()) {
+
             MessageText message = iterator.next();
             boolean receiverExist = isAgentExist(message.getReceiver());
             Agent receiverAgent= findAgentByName(message.getReceiver());
@@ -80,7 +82,7 @@ public class Controller implements Runnable{
                 transferMessage(message,receiverAgent);
 
                 loggerConsole.info("Message " + message.getNumMessage() + " sent to " + message.getReceiver());
-                fileLogger.info("Message " + message.getNumMessage() + " sent to " + message.getReceiver());
+                fileLogger.info("Message " + message.getNumMessage() + " sent to " + message.getReceiver()+"-------");
                 iterator.remove();
                 //if no receiver, create a message with type noReceiver and back send to the sender
             }else if(receiverExist==false) {

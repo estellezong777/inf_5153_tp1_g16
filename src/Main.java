@@ -16,7 +16,7 @@ public class Main {
         }
 
         // Create the controller
-        Controller controller = new Controller(fileLogger,consoleLogger);
+        Controller controller = new Controller(consoleLogger,fileLogger);
 
         // Create agents BOB and ALICE
         Agent bob = new Agent("BOB", controller, consoleLogger, fileLogger);
@@ -41,9 +41,11 @@ public class Main {
         bob.sendMessage(message2);
 
         MessageText message3 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "Did you complete the project?");
+        message3.setMessageState(false);
         bob.sendMessage(message3);
 
         MessageText message4 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "Let's meet up for lunch.");
+        message4.setMessageState(false);
         bob.sendMessage(message4);
 
         MessageText message5 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "Have you seen the latest news?");
@@ -56,6 +58,7 @@ public class Main {
         bob.sendMessage(message7);
 
         MessageText message8 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "Can you share the report?");
+        message8.setMessageState(false);
         bob.sendMessage(message8);
 
         MessageText message9 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "What are your plans for the weekend?");
@@ -63,6 +66,7 @@ public class Main {
 
         MessageText message10 = new MessageText(bob.getName(), alice.getName(), msgType.normalText, "Looking forward to your reply.");
         bob.sendMessage(message10);
+
 
         // Create and start the controller thread to handle message exchange
         Thread controllerThread = new Thread(controller);
