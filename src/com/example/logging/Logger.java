@@ -22,8 +22,8 @@ public abstract class Logger {
 
     // La méthode 'public void info' est appelée quand un message est envoyé avec succès.
     // Et la méthode 'public void debug' est appelée quand un message est envoyé avec échec.
-    // Le niveau INFO est plus important. Mais le niveau DEBUG a moins de priorité, donc il imprime des messages qui indiquent
-    // le problème et le problème d'envoi.
+    // Le niveau INFO est plus important. Mais le niveau DEBUG a moins de priorité, donc il imprime des messages qui
+    // indiquent le problème et le problème d'envoi dans Console.
     public void info(String msg){
         log(loggerLevel.INFO," ( "+ serviceName +" ) " + msg);
     }

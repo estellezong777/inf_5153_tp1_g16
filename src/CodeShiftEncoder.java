@@ -1,3 +1,6 @@
+
+// Consiste à changer chaque lettre du message par la lettre suivante.
+// On considèrera le code ASCII des caractères. Le décodage fera l’opération inverse.
 public class CodeShiftEncoder extends Encoder {
     @Override
     public String encode(String msg) {
