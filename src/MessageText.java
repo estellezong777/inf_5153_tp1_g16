@@ -18,6 +18,9 @@ public class MessageText {
 
     }
 
+
+
+
     public int getNumMessage() {
         return numMessage;
     }

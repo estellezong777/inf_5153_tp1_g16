@@ -74,7 +74,6 @@ public class Controller implements Runnable{
             MessageText message = iterator.next();
             boolean receiverExist = isAgentExist(message.getReceiver());
             Agent receiverAgent= findAgentByName(message.getReceiver());
-
             if (message.isMessageActive() == true){ // 信息没有丢失，可以发送
                 //if receiver exist and he/her is online, send message to receiver
                 if (receiverExist ==true && (receiverAgent.isStateOnline()==true)) {
@@ -92,12 +91,13 @@ public class Controller implements Runnable{
 
                     loggerConsole.debug("Receiver: " + message.getReceiver() +" do not existe. Please try again later. ");
 //                            " does not exist. Sent NoReceiver message to " + message.getSender());
-                    fileLogger.debug("Receiver: " + message.getReceiver() +"do not existe");
+                    fileLogger.debug("Receiver: " + message.getReceiver() +" do not existe");
                 }
                 iterator.remove();
             }
-            }else {loggerConsole.debug("Sorry, message "+message.getNumMessage()+" is lost!");}
-            fileLogger.debug("Message"+message.getNumMessage()+"is lost");
+            }else {loggerConsole.debug("Sorry, message "+message.getNumMessage()+" is lost!");
+                fileLogger.debug("Message "+message.getNumMessage()+" is lost");}
+
         }
     }
 
