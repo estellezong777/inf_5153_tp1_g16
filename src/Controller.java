@@ -16,15 +16,15 @@ public class Controller implements Runnable{
         this.fileLogger=fileLogger;
     }
 
-    // subscribe as an agent while the agent name is unique.
+    // l'utilisateur s'abonne en tant qu'agent tout en utilisant un nom d'agent unique.
     public void subscribe(Agent agent){
-        //check the name if it's already in used
+        //vérifier le nom de l'agent s'il est déjà inscrit
         for (Agent agentName: listAgents){
             if(agentName.equals(agent.getName()) ){
                 throw new IllegalArgumentException("Agent name is already subscribed by other! Please chose a new name!");
             };
         }
-        // if not, add the agent name to the agents list and print a message to the user
+        // Sinon, ajouter le nom de l'agent à la liste des agents et afficher un message à l'utilisateur
         listAgents.add(agent);
         agent.setStateOnline(true);
         loggerConsole.info("Congratulations! Agent "+agent.getName()+" is subscribed successfully!");
@@ -32,8 +32,10 @@ public class Controller implements Runnable{
 
     }
 
+    // Cette méthode est utilisée pour se désabonner l'agent.
     public void unsubscribe(Agent agent){
-        //the user only can unsubscribe while his/her name is in the agent list.
+        // L'utilisateur ne peut se désinscrire que tant que son nom figure dans la liste des agents，
+        // Si le nom existe déjà, le système affichera un message d'erreur
         for (Agent agentName: listAgents){
             if(agentName.equals(agent.getName()) ){
                 listAgents.remove(agent);
@@ -45,7 +47,8 @@ public class Controller implements Runnable{
         throw new IllegalArgumentException("Agent name doesn't in the agent list! Please check your information!");
     }
 
-    // find a specific agent by enter his/her name,if exist return the name,otherwise return null
+    // Chercher un agent spécifique en utilisant son nom comme un paramètre, s'il existe,
+    // retourner le nom, sinon retourner null
     public Agent findAgentByName(String name) {
         for (Agent agentFind : listAgents) {
             if (agentFind.getName().equals(name)){
@@ -56,33 +59,45 @@ public class Controller implements Runnable{
         }
 
 
-    // Fonction 'isAgentExist' call the fonction 'findAgentByName'. We compare the result that return in fonction
-    // 'findAgentByName' with the value 'null'. When method findAgentByName return null,it means that the agent that
-    // the user want to find doesn't exist, so fonction 'isAgentExist' will return a boolean
+    // La fonction 'isAgentExist' appelle la fonction 'findAgentByName'. Nous comparons le résultat qui renvoie en
+    // fonction 'findAgentByName' avec la valeur 'null'. Lorsque la méthode 'findAgentByName' renvoie null,
+    // cela signifie que l'agent qui l'utilisateur que nous le cherchons n'existe pas, donc la fonction 'isAgentExist'
+    // retournera un booléen
 
     public boolean isAgentExist(String nameAgentCheck){
         return findAgentByName(nameAgentCheck) !=null;
     }
 
     public void addMsgToListInTransit(MessageText msg){
+
         listMessageInTransit.add(msg);
 
     }
     public synchronized void processMsgInTransit(){
         Iterator<MessageText> iterator = listMessageInTransit.iterator();
         while (iterator.hasNext()) {
+
             MessageText message = iterator.next();
             boolean receiverExist = isAgentExist(message.getReceiver());
             Agent receiverAgent= findAgentByName(message.getReceiver());
-            if (message.isMessageActive() == true){ // 信息没有丢失，可以发送
-                //if receiver exist and he/her is online, send message to receiver
+
+            // Si les messages ne sont pas perdus et peuvent être envoyées
+            if (message.isMessageActive() == true){
+
+                // Si le receveur existe et qu'il est en ligne, envoyer un message au receveur
                 if (receiverExist ==true && (receiverAgent.isStateOnline()==true)) {
                 transferMessage(message,receiverAgent);
 
+
+                // Afficher des informations sur Console et dans le log ficher
                 loggerConsole.info("Message " + message.getNumMessage() + " sent to " + message.getReceiver());
                 fileLogger.info("Message " + message.getNumMessage() + " sent to " + message.getReceiver());
+
+                // Une fois le message traité normalement, nous le supprimons de la liste 'listMessageInTransit'
                 iterator.remove();
-                //if no receiver, create a message with type noReceiver and back send to the sender
+
+                // s'il n'y a pas de receveur et l'expéditeur est toujours exist,
+                // créer un message de type noReceiver et renvoyer-le à l'expéditeur.
             }else if(receiverExist==false) {
                 MessageText noReceiverMessage = new MessageText(message.getSender(),null, msgType.noReceiver, "Receiver does not exist");
                 Agent sender = findAgentByName(message.getSender());
@@ -95,6 +110,7 @@ public class Controller implements Runnable{
                 }
                 iterator.remove();
             }
+                // le message est perdu, le système va afficher des informations sur Console et log fichier
             }else {loggerConsole.debug("Sorry, message "+message.getNumMessage()+" is lost!");
                 fileLogger.debug("Message "+message.getNumMessage()+" is lost");}
 
@@ -102,6 +118,7 @@ public class Controller implements Runnable{
     }
 
 
+    // Cette méthode peut transfer des messages au receveur.
     public void transferMessage(MessageText message,Agent receiver){
         receiver.receiveMessage(message);
     }

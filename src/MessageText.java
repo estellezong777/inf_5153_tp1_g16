@@ -1,11 +1,15 @@
 import java.util.concurrent.atomic.AtomicInteger;
 public class MessageText {
-    private static final AtomicInteger idMessage = new AtomicInteger(0);
+    private static final AtomicInteger idMessage = new AtomicInteger(0); // id de message généré
     private final msgType type;
     private  String text;
     private final int numMessage;
     private final String Sender;
     private final String receiver;
+
+    // La valeur 'messageIsActive' est un état de message.
+    // Si l'état du message est active, il peut être transféré normalement. Sinon, indiquant que le message est perdu
+    // par accident.
     private boolean messageIsActive = true;
 
 
@@ -17,9 +21,6 @@ public class MessageText {
         this.receiver = receiver;
 
     }
-
-
-
 
     public int getNumMessage() {
         return numMessage;

@@ -1,8 +1,7 @@
 package com.example.logging;
-
-
 import java.io.*;
-
+// Les résultats pertinents du traitement des informations sont enregistrées dans un fichier 'fileName' qui est défini
+//dans le Main. Ici, nous utilisons 'log.txt'
 public class loggerFile extends Logger implements AutoCloseable{
     private final PrintWriter writer;
 
