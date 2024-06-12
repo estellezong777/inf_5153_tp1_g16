@@ -112,7 +112,7 @@ public class Agent implements Runnable {
                     break;
                 case normalText:
                     MessageText messageACK = new MessageText(msg.getReceiver(), msg.getSender(), msgType.ACK, "ACK");
-                    controller.addMsgToListInTransit(messageACK);
+                    sendMessage(messageACK);
                     break;
                 case noReceiver:
                     sendmsgList.removeIf(m -> m.getNumMessage() == msg.getNumMessage());
@@ -136,7 +136,7 @@ public class Agent implements Runnable {
             while (true) {
                 processReceivedMessages();
                 try {
-                    wait(); // Wait until notified
+                    Thread.sleep(10000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
