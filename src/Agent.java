@@ -91,6 +91,10 @@ public class Agent implements Runnable {
         Logger.loggerLevel logLevel = Logger.loggerLevel.INFO;
         String messagePrint = msg.getSender() + " sent a message " + msg.getType() + "( " + msg.getNumMessage() +
                 ") to: " + msg.getReceiver();
+        if (msg.getType() == msgType.ACK){
+            messagePrint = msg.getSender() + " sent a message " + msg.getType() + "( " + msg.getNumMessage() +
+                    ") to: " + msg.getReceiver() + " who had sent message " + msg.getRelatedMessage() ;
+        }
         loggerConsole.log(logLevel, messagePrint);
         fileLogger.info(messagePrint);
     }
