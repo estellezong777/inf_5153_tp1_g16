@@ -71,7 +71,7 @@ public class Agent implements Runnable {
     // de transit en attente de traitement, et la console et le fichier afficheront également le texte
     // correspondant pour demander l'état d'envoi des informations.
     public void sendMessage(MessageText msg) {
-        //定义信息1用neutre
+        //Pour message1 : Encodeur neutre
         if (msg.getType() == msgType.normalText) {
             sendmsgList.add(msg);
 
@@ -96,6 +96,7 @@ public class Agent implements Runnable {
     }
 
 
+
     public boolean isStateOnline() {
         return stateOnline;
     }
@@ -112,6 +113,7 @@ public class Agent implements Runnable {
                     break;
                 case normalText:
                     MessageText messageACK = new MessageText(msg.getReceiver(), msg.getSender(), msgType.ACK, "ACK");
+                    messageACK.setRelatedMessage(msg.getNumMessage());
                     sendMessage(messageACK);
                     break;
                 case noReceiver:
@@ -123,7 +125,7 @@ public class Agent implements Runnable {
             }
         }
         receivedmsgList.clear();
-        notify(); // Notify the controller to proceed
+        notify(); // signaler au Contrôleur pour procéder
     }
 
     public String getName() {

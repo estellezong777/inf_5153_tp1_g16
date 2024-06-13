@@ -73,26 +73,33 @@ public class Controller implements Runnable{
         listMessageInTransit.add(msg);
 
     }
-    public synchronized void processMsgInTransit(){
-        Iterator<MessageText> iterator = listMessageInTransit.iterator();
-        while (iterator.hasNext()) {
 
+
+    public synchronized void processMsgInTransit(int time){
+        Iterator<MessageText> iterator = listMessageInTransit.iterator();
+       // System.out.println(time);
+        while (iterator.hasNext()) {
             MessageText message = iterator.next();
             boolean receiverExist = isAgentExist(message.getReceiver());
             Agent receiverAgent= findAgentByName(message.getReceiver());
+
+            //Simuler le scénario où on perd les deux premiers ACK message par rapport au message 2
+            if(time <= 2 & message.getType() == msgType.ACK && message.getRelatedMessage()==2 ){
+                message.setMessageState(false);
+            }else if(time > 2 & message.getType() == msgType.ACK ){
+                message.setMessageState(true);
+            }
 
             // Si les messages ne sont pas perdus et peuvent être envoyées
             if (message.isMessageActive() == true){
 
                 // Si le receveur existe et qu'il est en ligne, envoyer un message au receveur
                 if (receiverExist ==true && (receiverAgent.isStateOnline()==true)) {
-                transferMessage(message,receiverAgent);
-
 
                 // Afficher des informations sur Console et dans le log ficher
                 loggerConsole.info("Message " + message.getNumMessage() + " sent to " + message.getReceiver());
                 fileLogger.info("Message " + message.getNumMessage() + " sent to " + message.getReceiver());
-
+                transferMessage(message,receiverAgent);
                 // Une fois le message traité normalement, nous le supprimons de la liste 'listMessageInTransit'
                 iterator.remove();
 
@@ -111,10 +118,20 @@ public class Controller implements Runnable{
                 iterator.remove();
             }
                 // le message est perdu, le système va afficher des informations sur Console et log fichier
-            }else {loggerConsole.debug("Sorry, message "+message.getNumMessage()+" is lost!");
-                fileLogger.debug("Message "+message.getNumMessage()+" is lost");}
+            }else {
+                if(message.getType() == msgType.ACK){
+                    loggerConsole.debug("Sorry, message "+message.getNumMessage()+ "( " + message.getType() +
+                            ") is lost! (related to message " + message.getRelatedMessage() +") ");
+                    fileLogger.debug("Sorry, message "+message.getNumMessage()+ "( " + message.getType() +
+                            ") is lost! (related to message " + message.getRelatedMessage() +") ");
+                }
+                else{
+                    loggerConsole.debug("Sorry, message "+message.getNumMessage()+ "( " + message.getType() +
+                            ") is lost!");
+                    fileLogger.debug("Message "+message.getNumMessage()+"( " + message.getType() +
+                            ") is lost!");}}
+            }
 
-        }
     }
 
 
@@ -124,8 +141,12 @@ public class Controller implements Runnable{
     }
 
     public void run() {
+
+        int time = 0;  // Combien de fois le contrôleur traite les messages
         while (true) {
-            processMsgInTransit();
+            System.out.println("\n");
+            System.out.println("Controller start processing messages (time: " + (time +1) +" )." );
+            processMsgInTransit(time++);
             try {
                 Thread.sleep(10000);
             } catch (InterruptedException e) {

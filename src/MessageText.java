@@ -12,6 +12,9 @@ public class MessageText {
     // par accident.
     private boolean messageIsActive = true;
 
+    private int relatedMessageNum;
+
+
 
     public MessageText( String sender, String receiver,msgType type, String text) {
         this.numMessage = idMessage.incrementAndGet();
@@ -54,4 +57,11 @@ public class MessageText {
         this.text = text;
     }
 
+    public int getRelatedMessage() {
+        return relatedMessageNum;
+    }
+
+    public void setRelatedMessage(int relatedMessageNum) {
+        this.relatedMessageNum = relatedMessageNum;
+    }
 }
